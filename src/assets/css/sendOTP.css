@@ -1,0 +1,36 @@
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: max-content;
+  width: max-content;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  padding: 25px;
+  margin-top: 40vh; /* Chuyển độ cao lên 50% của viewport height */
+  transform: translateY(-50%); /* Dịch chuyển lên trên 50% của chính nó */
+}
+
+.otp-inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.otp-inputs input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.otp-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #3697a6;
+  border-radius: 20px;
+}

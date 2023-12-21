@@ -1,0 +1,15 @@
+.otp-page p {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center; 
+    margin-top: 250px;
+    margin-bottom: 250px;
+    font-size: 25px;
+  }
+.otp-page a{
+    margin-top: 10px;
+    font-size: 20px;
+    text-decoration: none;
+}
+  

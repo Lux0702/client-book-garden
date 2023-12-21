@@ -1,0 +1,73 @@
+.register-container {
+  max-width: 1250px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(232, 211, 211, 0.1);
+  border-radius: 40px;
+  overflow: hidden;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column; /* Chuyển sang hướng dọc (cột) */
+}
+
+.row-container {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.input-container,
+.image-container {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.input-container:last-child,
+.image-container:last-child {
+  margin-right: 0;
+}
+
+.input-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-container input {
+  width: calc(100% - 16px);
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background-color: #3697a6;
+  color: #fff;
+  cursor: pointer;
+}
+button:hover{
+  background-color: #ee6767; /* Đổi màu khi hover */
+  box-shadow: 0 0 10px rgb(238, 102, 102); /* Hiệu ứng nổi */
+}
+.register-img {
+  display: block;
+  margin: auto;
+  max-width: 180px;
+  max-height: 180px;
+  margin-bottom: 25px;
+ 
+}

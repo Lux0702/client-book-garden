@@ -1,0 +1,18 @@
+.banner {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 400px; /* Điều chỉnh độ cao tùy ý */
+    cursor: pointer;
+  }
+  
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease; /* Sử dụng transition để thêm hiệu ứng di chuyển */
+  }
+  
+  .banner:hover .banner-image {
+    transform: translateX(-20%); /* Di chuyển hình ảnh sang trái khi hover */
+  }
+  

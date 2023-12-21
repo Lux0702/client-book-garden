@@ -1,0 +1,25 @@
+/* profile.css  */
+.container {
+    display: flex;
+  }
+  
+  .content-container {
+    flex-grow: 1;
+    margin-left: 16px; /* Điều chỉnh khoảng cách giữa sidebar và content */
+  }
+  .profile-contaier {
+    display: flex;
+    padding: 20px;
+    width: 90%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+   
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    margin-left: 0;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    
+  }

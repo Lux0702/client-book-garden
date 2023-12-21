@@ -1,0 +1,65 @@
+.payment-container {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    border: 0.5px;
+    box-shadow: inset;
+    margin: 10px auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, 文泉驛正黑, "WenQuanYi Zen Hei", "Hiragino Sans GB", "儷黑 Pro", "LiHei Pro", "Heiti TC", 微軟正黑體, "Microsoft JhengHei UI", "Microsoft JhengHei", sans-serif;
+ 
+  }
+.payment-address{
+    border: 1px solid #ddd; /* Đường viền */
+    padding: 10px; /* Khoảng cách nội dung và khung */
+    margin-bottom: 10px; /* Khoảng cách giữa các container */
+    background-color: #FFF;
+    box-Shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-height: 280px;
+    height: max-content;
+}
+.payment-item-container {
+    border: 1px solid #ddd; /* Đường viền */
+    padding: 10px; /* Khoảng cách nội dung và khung */
+    margin-bottom: 10px; /* Khoảng cách giữa các container */
+    background-color: #FFF;
+    box-Shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.payment-address p{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color:#FF0000	;
+    font-size: 20px;
+    font-weight: normal;
+    font-style: italic;
+
+}
+.payment-address img{
+    width: 50px;
+    height: 50px;
+}
+.css-b62m3t-container {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+.input-address{
+    flex-basis: 90%;
+}
+.btn.btn-primary{
+    width: max-content;
+    margin-left: 5px;
+    background-color: #3697A6;
+    border: none;
+}
+.method{
+    display: flex;
+    flex-direction: row;
+}
+.custome-total-payment{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
