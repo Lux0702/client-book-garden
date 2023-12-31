@@ -1,0 +1,106 @@
+.post-header{
+    margin-top: 0;
+    border: 1px solid #ddd; /* Đường viền */
+    padding: 10px; /* Khoảng cách nội dung và khung */
+    background-color: #3697A6;
+    box-Shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+.post-header img{
+  width: 150px;
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+}
+.post-body{
+    background-color: #ddd;
+}
+.post-button-login{
+    margin-left: 20px;
+    background-color: #3697A6;
+    border: none;
+    width: max-content;
+    text-decoration: none;
+}
+.post-button-login:hover{
+    background-color: #3697A6;
+    box-shadow: none;
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+
+}
+.header-control{
+    display: inline-block;
+    vertical-align: middle;
+}
+.body-postist{
+    margin-top: 50px;
+    margin-left: 50px;
+}
+
+.post-button-discuss{
+    margin-top: 20px;
+    margin-left: 50px;
+    background-color: #3697A6;
+    border: none;
+    border-radius: 10px;
+    width: max-content;
+    width: 200px;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 13px;
+}
+.post-button-discuss:hover{
+    background-color: #3697A6;
+    box-shadow: none;
+    transform: scale(1.1);
+    /* transition: transform 0.3s ease; */
+
+}
+.hide-post{
+    max-height: 200px;
+    overflow-y: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .visible {
+    max-height: 1000px;
+  }
+  
+  .hidden-post {
+    max-height: 200px;
+  }
+.post-button-login:hover{
+    
+    border: none;
+    height: max-content;
+    text-decoration: none;
+}
+.post-button-login img{
+    width: 38px;
+    height: 38px;
+}
+.post-button-login a{
+    text-decoration: none;
+    font-size: 15px;
+    color: #fff;
+    margin-left: 5px;
+    text-decoration: none;
+}
+.post-button-login a:hover{
+    color: #7d12bc;
+    text-decoration: none;
+}
+.post-button-login Link{
+    text-decoration: none;
+}
+:where(.css-dev-only-do-not-override-gzal6t).ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-title-content >a::after, :where(.css-dev-only-do-not-override-gzal6t).ant-dropdown-menu-submenu .ant-dropdown-menu .ant-dropdown-menu-title-content >a::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    text-decoration: none;
+    font-size: 15px;
+}

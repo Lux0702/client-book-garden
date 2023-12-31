@@ -10,10 +10,12 @@ import { API_BASE_URL } from "../context/Constant";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { checkToken, refreshToken } from '../utils/auth';
+import {  Spin } from 'antd'
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [passWord, setPassword] = useState('');
   const navigate = useNavigate();
+  const [spinning, setSpinning] = useState(false);
 
   useEffect(() => {
     const token = checkToken();
@@ -27,6 +29,7 @@ function LoginPage() {
 
   const handleLogin = async () => {
     try {
+      setSpinning(true);
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
@@ -59,6 +62,8 @@ function LoginPage() {
       // Xử lý lỗi kết nối hoặc lỗi server
       console.error('Lỗi:', error);
       toast.error("Lỗi kết nối");
+    }finally {
+      setSpinning(false);
     }
   };
   const handleForgotPassword = async () => {
@@ -116,7 +121,8 @@ function LoginPage() {
       </div>
       <ToastContainer/>
       <Footer />
-      
+      <Spin spinning={spinning} fullscreen />
+
     </div>
 
   );

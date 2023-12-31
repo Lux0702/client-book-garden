@@ -3,14 +3,14 @@
 import { API_BASE_URL } from "../context/Constant";
 
 export const checkToken = () => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
+  const userInfoString = localStorage.getItem('userInfo')
+  const userInfo = JSON.parse(userInfoString)
   if (userInfo && userInfo.accessToken) {
     // Kiểm tra token đã hết hạn hay chưa
     const currentTimestamp = Math.floor(Date.now() / 1000);
     if (userInfo.expireTime < currentTimestamp) {
       // Token đã hết hạn, kiểm tra xem có refreshToken không
-      if (userInfo.data && userInfo.data.refreshToken) {
+      if (userInfo && userInfo.refreshToken) {
         // Refresh token
         refreshToken(userInfo.data.refreshToken);
       } else {
@@ -36,23 +36,24 @@ export const startTokenRefreshInterval = () => {
 
 export const refreshToken = async () => {
   try {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
-    if (userInfo && userInfo.data && userInfo.data.refreshToken) {
+    const userInfoString = localStorage.getItem('userInfo')
+    const userInfo = JSON.parse(userInfoString)
+    if (userInfo  && userInfo.refreshToken) {
       const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refreshToken: userInfo.data.refreshToken }),
+        body: JSON.stringify({ refreshToken: userInfo.refreshToken }),
       });
 
       if (response.ok) {
-        const data = await response.json();
-        userInfo.accessToken = data.accessToken;
-        userInfo.data.refreshToken = data.refreshToken;
+        const token = await response.json();
+        userInfo.accessToken = token.data.accessToken;
+        userInfo.refreshToken = token.data.refreshToken;
 
         // Lưu lại userInfo đã được cập nhật vào localStorage
+        console.log("Token mới được lưu")
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
         // Token mới đã được lưu, bạn có thể sử dụng userInfo.accessToken để gọi API

@@ -47,6 +47,7 @@ const HistoryOrder = () => {
   const [selectedBook, setSelectedBook] = useState([])
   const [selectedRowId, setSelectedRowId] = useState(null)
   const [orderDetail, setOrderDetail] = useState(null)
+  const [selectedOrderItem, setSelectedOrderItem] = useState([]);
   const [isOrderModalOpen, setIsOrderModalOpen] = useState(false)
   const [statusOptions, setStatusOptions] = useState([
     { status: 'Đã xác nhận', color: 'blue' },
@@ -143,7 +144,16 @@ const HistoryOrder = () => {
     '--cui-dropdown-border-radius': '8px',
     '--cui-btn-hover-border-color': 'none',
   }
-
+  const handleRowClick = (id,orderItems) => {
+    setSelectedRowId(id)
+    console.log(id)
+    setSelectedOrderItem(orderItems);
+    setIsOrderModalOpen(true)
+    //handleShowOrderDetail(selectedRowId)
+  }
+  // const handleShowOrderDetail = (id) =>{
+  //   setIsOrderModalOpen(true)
+  // }
   return (
     <CRow>
       <CCol xs={12}>
@@ -170,15 +180,15 @@ const HistoryOrder = () => {
                   <CTableRow
                   key={index}
                   active={selectedRowId === order._id}
-                  // onClick={(e) => {
-                  //   handleRowClick(order._id)
-                  // }}
+                  onClick={(e) => {
+                    handleRowClick(order._id, order.orderItems)
+                  }}
                 > 
                   <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                   <CTableDataCell>{order.fullName}</CTableDataCell>
                   <CTableDataCell>{order.phone}</CTableDataCell>
                   <CTableDataCell>{order.address}</CTableDataCell>
-                  <CTableDataCell>{order.orderDate}</CTableDataCell>
+                  <CTableDataCell>{formatDate(order.orderDate)}</CTableDataCell>
                   <CTableDataCell>{order.totalAmount}</CTableDataCell>
                   <CTableDataCell>
                     <CDropdown variant="btn-group" style={{ borderRadius: '12px' }}>
@@ -227,99 +237,12 @@ const HistoryOrder = () => {
                 <CModalTitle>Chi tiết đơn hàng</CModalTitle>
               </CModalHeader>
               <CModalBody>
-                {/* Render product details here */}
-                {orderDetail && (
-                  <>
-                    <p>
-                      Tên người đặt hàng:
-                      <CFormInput
-                        aria-label="Tựa đề"
-                        disabled
-                        value={selectedUser ? selectedUser.fullName : ''}
-                      />
-                    </p>
-                    <div className="mb-3">
-                      <CRow>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="totalAmount">Tổng đơn hàng:</CFormLabel>
-                          <CInputGroup className="mb-3">
-                            <CFormInput
-                              disabled
-                              type="text"
-                              id="totalAmount"
-                              name="totalAmount"
-                              value={orderDetail.totalAmount || ''}
-                            />
-                            <CInputGroupText>VNĐ</CInputGroupText>
-                          </CInputGroup>
-                        </CCol>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="orderDate">Ngày đặt hàng</CFormLabel>
-                          <CFormInput
-                            disabled
-                            type="date"
-                            id="orderDate"
-                            name="orderDate"
-                            value={formatDate(orderDetail.orderDate)}
-                          />
-                        </CCol>
-                      </CRow>
-                    </div>
-                    <div className="mb-3">
-                      <CRow>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="status">Trạng thái:</CFormLabel>
-                          <CFormInput
-                            disabled
-                            type="text"
-                            id="status"
-                            name="status"
-                            value={orderDetail.status || ''}
-                          />
-                        </CCol>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="phone">Số điện thoại người nhận</CFormLabel>
-                          <CFormInput
-                            disabled
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            value={orderDetail.phone || 0}
-                          />
-                        </CCol>
-                      </CRow>
-                    </div>
-                    <div className="mb-3">
-                      <CRow>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="fullName">Tên người nhận:</CFormLabel>
-                          <CFormInput
-                            disabled
-                            type="text"
-                            id="fullName"
-                            name="fullName"
-                            placeholder="Nhập giá tiền"
-                            value={orderDetail.fullName}
-                          />
-                        </CCol>
-                        <CCol xs="6" className="mb-3">
-                          <CFormLabel htmlFor="address">Địa chỉ nhận hàng:</CFormLabel>
-                          <CFormInput
-                            disabled
-                            type="text"
-                            id="address"
-                            name="address"
-                            value={orderDetail.address}
-                          />
-                        </CCol>
-                      </CRow>
-                    </div>
+                {/* Render product details here */}              
                     <div>
-                      <p>:</p>
                       <CAccordion flush>
-                        {orderDetail &&
-                          orderDetail.items &&
-                          orderDetail.items.map((item, index) => (
+                        {selectedOrderItem  &&
+                          selectedOrderItem &&
+                          selectedOrderItem.map((item, index) => (
                             <CAccordionItem key={index}>
                               <CAccordionHeader>
                                 {index + 1}. {item.book.title}
@@ -342,8 +265,6 @@ const HistoryOrder = () => {
                           ))}
                       </CAccordion>
                     </div>
-                  </>
-                )}
               </CModalBody>
               {/* <CModalFooter>
               </CModalFooter> */}

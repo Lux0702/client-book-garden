@@ -38,7 +38,7 @@
 .item-price {
   font-size: 16px;
   color: #888;
-  width: 25%;
+  width: 20%;
   text-align: center;
 }
 .item-original-price{
@@ -51,7 +51,7 @@
 .quantity-controls {
   display: flex;
   align-items: center;
-  width: 15%;
+  width: 19%;
   text-align: center;
 }
 
@@ -71,4 +71,9 @@
   color: #555;
   width: 35%;
   text-align: center;
+}
+.delete-cart:hover{
+  transform: scale(1.5);
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }

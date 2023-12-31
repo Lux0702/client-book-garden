@@ -3,14 +3,20 @@
   max-height: 220px;
   margin-top: 50px;
   position: relative;
-  margin-bottom: 50px;
-  
+  margin-bottom: 50px;  
 }
+.container-book:hover
+ {
+  transform: scale(1.1);
+  transition: transform 0.3s ease; 
+  cursor: pointer;
+}
+
 
 .container-content {
   display: flex;
   flex-direction: column;
-  
+  border-radius: 8px;
   text-align: left;
   border: 1px solid #ccc;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -24,7 +30,7 @@
 }
 
 .container-text {
-  margin-top: 180px;
+  margin-top: 165px;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -71,25 +77,115 @@
   color: #393280;
   font-style: Bold;
   font-weight: 600;
-  max-height: 32px;
+  max-height: 37px;
+  height: 37px;
   font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100vh;
+  white-space: wrap;
 }
 
 .image-container {
   position: absolute;
-  top: -90px;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: -70px;
+  width: 160px;
+  height: 220px;
   object-fit: contain;
   z-index: 2;
+  margin: 15px;
   margin-bottom: 0;
   align-items: center;
+  background-size: cover; 
+  background-position: center; 
+  background-repeat: no-repeat;
+  padding: 10px;
   
 }
 
 .image-container img {
-  width: 100vw;
+  width: 190px;
   height: 100vw;
   object-fit: contain;
+}
+/* .wishlist:hover{
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  transform: scale(1.5);
+} */
+/* --css cho hover BOOK */
+/* Thêm CSS để ẩn nút mua hàng mặc định */
+/* .container-book .show-access-button {
+} */
+/* .container-book .background-container{
+  display: none;
+} */
+
+/* Hiển thị nút mua hàng khi hover vào container-book */
+.container-book:hover .background-container {
+  /* display: block; */
+  opacity: 1;
+}
+
+/* Định dạng nút mua hàng */
+.background-container .show-access-button {
+  background-color: #6251DD;
+  color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 160px;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: row;
+}
+.background-container .show-access-button-1 {
+  background-color: rgba(255, 255, 255, 0);
+  color: #6251DD;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 5px;
+  width: 160px;
+  display: flex;
+  flex-direction: row;
+}
+.background-container{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background-color: #7DADB4;
+  z-index: 10;
+  width: 190px;
+  height: 315px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+}
+
+/* Định dạng nút mua hàng khi hover */
+.show-access-button:hover {
+  background-color: #6251DD;
+}
+.show-access-button-1:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.container-book:hover .background-container {
+  background-color: rgba(125, 173, 180, 0.8);
+}
+.show-access-button img,
+.show-access-button-1 img{
+  max-width: 20px;
+  max-height: 20px;
 }

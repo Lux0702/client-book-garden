@@ -85,7 +85,6 @@ function RegisterPage() {
 
         if (response.ok) {
           // Đăng ký thành công
-          localStorage.setItem("registeredEmail", email);
           const Data = await response.json();
           const successMessage = Data.message || "Registration failed. Please try again.";
           console.error("Registration success:", Data);

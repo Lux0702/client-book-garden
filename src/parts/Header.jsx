@@ -7,23 +7,47 @@ import ic_account from "../assets/icons/account.svg";
 import ic_cart from "../assets/icons/cart.svg";
 import ic_wishlist from "../assets/icons/wishlist.svg";
 import rectangle from "../assets/icons/Rectangle.svg";
+import { API_BASE_URL, DASHBOARD } from "../context/Constant";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [fullName, setFullName] = useState("");
   const [userRole, setuserRole] = useState("");
   const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState("");
+  const userInfoString = localStorage.getItem("userInfo");
+  const userInfo = JSON.parse(userInfoString);
+  const token=userInfo?userInfo.accessToken:"";
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const currentPath = window.location.pathname;
 
+    // Xác định trang và điều hướng đến trang tương ứng
+    let targetPath;
+    if (currentPath === '/wishlist') {
+      targetPath = `/wishlist?search=${searchTerm}`;
+    } else {
+      targetPath = `/book-list?search=${searchTerm}`;
+    }
+  
+    // Chuyển hướng đến trang
+    navigate(targetPath);
+  };
   useEffect(() => {
     // Kiểm tra xem có thông tin đăng nhập trong localStorage không
-    const userInfoString = localStorage.getItem("userInfo");
-    if (userInfoString) {
-      const userInfo = JSON.parse(userInfoString);
+    if (userInfo) {
       setIsLoggedIn(true);
       //setFullName(userInfo.userDTO.fullName);
-      setFullName(userInfo.userDTO.fullName.split(" ").pop());
-      setuserRole(userInfo.userDTO.role);
+      // setFullName(userProfile.fullName.split(" ").pop());
+      const userString =localStorage.getItem('user')
+      const user = JSON.parse(userString)
+      console.log(user)
+      setUserProfile(user)
     }
   }, []);
 
@@ -33,6 +57,7 @@ const Header = () => {
     setFullName("");
     setuserRole("");
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("user");
     // Chuyển hướng về trang Home sau khi đăng xuất
     // navigate.push('/');
   };
@@ -40,7 +65,33 @@ const Header = () => {
   const toggleAccountDropdown = () => {
     setShowAccountDropdown(!showAccountDropdown);
   };
+  //get user profile
+  useEffect(() => {
+    // Gọi API để lấy thông tin từ server
+    const fetchProfileData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/user/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, 
+          },
+        });
 
+        if (response.ok) {
+          const user = await response.json();
+          localStorage.setItem('user', JSON.stringify(user.data));
+          console.log(userProfile)
+        } else {
+          console.error('Error fetching profile data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
   return (
     <header className="header-container">
       <div className="container">
@@ -54,10 +105,12 @@ const Header = () => {
             <input
               type="text"
               className="search-input col-12"
-              placeholder="Search..."
+              placeholder="Tìm kiếm..."
+              value={searchTerm}
+              onChange={handleInputChange}
             />
-            <span className="search-icon">
-              <img src={iconSearch} alt="search" />
+            <span className="search-icon" onClick={handleSearchSubmit}>
+              <img src={iconSearch} alt="search"  />
             </span>
           </div>
         </div>
@@ -65,13 +118,15 @@ const Header = () => {
           <div className="div-access-tab">
             {isLoggedIn ? (
               <div className="account-dropdown" role="button" onClick={toggleAccountDropdown}>
-                <Link><img src={ic_account} alt="" /> {fullName}
+                <Link><img src={ic_account} alt="" /> {userProfile.fullName.split(" ").pop()}
+                {console.log(userProfile.fullName)}
                 <img className="img-space" src={rectangle} alt="" /></Link>
                 {showAccountDropdown && (
                   <div className="account-dropdown-content">
+                    <Link to="/post/my-post">Forum</Link>
                     <Link to="/profile/account">Profile</Link>
-                    {isLoggedIn && userRole  === "Admin" && (
-                      <Link to="http://localhost:3001/#/dashboard">Dashboard</Link>
+                    {isLoggedIn && userProfile.role  === "Admin" && (
+                      <Link to={`${DASHBOARD}/login`}>Dashboard</Link>
                     )}
                     <Link to="/" onClick={handleLogout}>Logout</Link>
                   </div>

@@ -5,6 +5,11 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { API_BASE_URL } from "../context/Constant";
 import { useParams } from 'react-router-dom';
+import wish from "../assets/icons/wish.svg"
+import wished from "../assets/icons/wished.png"
+import {  Spin } from 'antd'
+import { useNavigate } from 'react-router-dom';
+
 //popup hiện error
 const ErrorPopup = ({ message, onClose }) => {
   return (
@@ -19,9 +24,11 @@ const BookDetail = ({ product, onQuantityChange }) => {
   const { id } = useParams();
   console.log(id);
   const [quantity, setQuantity] = useState(1);
-  const bookDTO= JSON.stringify(product.bookDTO)
+  // const bookDTO= JSON.stringify(product.bookDTO)
+  const navigate = useNavigate();
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-
+  const [iconWish, setIsIconWish]= useState(wish);
+  const [spinning, setSpinning] = useState(false);
   const handleQuantityChange = (amount) => {
     const newQuantity = quantity + amount;
   
@@ -45,7 +52,8 @@ const closeErrorPopup = () => {
 const addToCart = async () => {
   
   try {
-    console.log(quantity, bookDTO._id); // Fix the typo here
+    setSpinning(true);
+    console.log(quantity, product._id); // Fix the typo here
     const userInfoString = localStorage.getItem("userInfo");
     const userInfo = JSON.parse(userInfoString);
     const token = userInfo.accessToken;
@@ -73,15 +81,102 @@ const addToCart = async () => {
   } catch (error) {
     console.error('Error adding to cart:', error);
     toast.error(error);
+  }finally {
+    setSpinning(false);
   }
 };
+  const handleWishChange = async ()=>{
+    try {
+      setSpinning(true);
+      const userInfoString = localStorage.getItem("userInfo");
+      const userInfo = JSON.parse(userInfoString);
+      const token=userInfo.accessToken;
+      const response = await fetch(`${API_BASE_URL}/books/${id}/addToWishList`, {
+          method: 'POST',
+          headers: {
+          Authorization: `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+          },
+      });
+  
+      if (response.ok) {
+          const updatedData = await response.json();
+          console.log('Profile updated successfully:', updatedData);
+          toast.success(updatedData.message)
+          setIsIconWish(wished)
+      } else {
+          const updatedData = await response.json();
+          console.error('Lỗi upload profile:', response.statusText);
+          toast.error(updatedData.message)
+      
+      }
+  } catch (error) {
+  toast.error('Lỗi kết nối:', error);
+  }finally {
+    setSpinning(false);
+  }
+  }
 
-
+  const formatCurrency = (value) => {
+    const formattedValue = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0, // Để loại bỏ phần thập phân
+      maximumFractionDigits: 0, // Để loại bỏ phần thập phân
+    }).format(value);
+  
+    return formattedValue;
+  };
+  // buy now
+  const handleBuyNow = async () => {
+    try {
+      setSpinning(true);
+  
+      const userInfoString = localStorage.getItem("userInfo");
+      const userInfo = JSON.parse(userInfoString);
+      const token = userInfo.accessToken;
+  
+      // Thêm thông tin xác thực vào yêu cầu
+      const response = await fetch(`${API_BASE_URL}/books/${id}/addToCart`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          bookID: id,
+          quantity: quantity,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+  
+      const responseData = await response.json();
+  
+      if (responseData.success) {
+        //toast.success('Đã thêm sản phẩm vào giỏ hàng');
+        const selectedItems = {"_id":id };
+        localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+        navigate('/cart');
+      } else {
+        toast.error(responseData.message);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error.message);
+      toast.error(error.message);
+    } finally {
+      setSpinning(false);
+    }
+  };
+  
   return (
     <div className="product-detail">
-      <img src={product.image} alt={product.bookDTO.title} />  
+      <img src={product.image} alt={product.title} />  
       <div className="product-info">
-        <h2>{product.bookDTO.title}</h2>
+        <h2>{product.title}</h2>
         <p className=''>
             <span className="info-label">
             Mô tả: <span className="bold-info-description">{product.description}</span>
@@ -90,8 +185,8 @@ const addToCart = async () => {
         <p className="authors-publisher">
           <span className="info-label">
             Tác giả: <span className="bold-info">
-            {product.bookDTO.authors ? (
-                    product.bookDTO.authors.map((authors, index) => (
+            {product.authors ? (
+                    product.authors.map((authors, index) => (
                       <span key={index}>
                         {index > 0 && ", "} 
                         {authors.authorName}
@@ -109,8 +204,8 @@ const addToCart = async () => {
         <p className="category-quantity">
           <span className="info-label">
             Thể loại: <span className="bold-info">
-            {product.bookDTO.categories ? (
-                    product.bookDTO.categories.map((category, index) => (
+            {product.categories ? (
+                    product.categories.map((category, index) => (
                       <span key={index}>
                         {index > 0 && ", "} 
                         {category.categoryName}
@@ -122,12 +217,12 @@ const addToCart = async () => {
             </span>
           </span>
           <span className="info-label">
-            Đã bán: <span className="bold-info">{product.bookDTO.soldQuantity}</span>
+            Đã bán: <span className="bold-info">{product.soldQuantity}</span>
           </span>
         </p>
         <p>
             <br/>
-            <span className="bold-info-price">{product.bookDTO.price.toFixed(2)}</span>
+            <span className="bold-info-price">{formatCurrency(product.price|| 0)}</span>
           
         </p>
         <div className="product-quantity-controls">
@@ -141,8 +236,10 @@ const addToCart = async () => {
             onClose={closeErrorPopup}
           />
         )}
-        <button className="buy-button" >Mua ngay</button>
+        <button className="buy-button"  onClick={handleBuyNow}>Mua ngay</button>
         <button className="add-to-cart-button" onClick={addToCart} >Thêm giỏ hàng</button>
+        <button className='wish' style={{backgroundImage:`url('${iconWish}')`}} onClick={handleWishChange}/>
+
       </div>
       <ToastContainer
       position="top-right"
@@ -155,6 +252,7 @@ const addToCart = async () => {
       draggable
       pauseOnHover
       theme="light"/>
+      <Spin spinning={spinning} fullscreen />
     </div>
   );
 };

@@ -151,4 +151,12 @@
     width: 16px; /* Độ rộng của checkbox */
     height: 16px; /* Chiều cao của checkbox */
   }
+  .empty-cart{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+  }
   

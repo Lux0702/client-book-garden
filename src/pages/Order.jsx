@@ -27,6 +27,8 @@ import { Toast } from '@coreui/coreui';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {useNavigate} from 'react-router-dom';
+import {  Spin } from 'antd'
+
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
@@ -44,6 +46,7 @@ const Order = () => {
   // const { orderItems } = state || {};
   //local storage
   const [orderItems, setOrderItems] = useState([]);
+  const [spinning, setSpinning] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [total, setTotal] = useState(0); // Thêm state để theo dõi tổng tiền
@@ -126,7 +129,8 @@ const Order = () => {
     // Add more address options as needed
   ];
   const paymethodMethod = [
-    { value:'Thanh toán khi nhận hàng', label: 'Thanh toán khi nhận hàng' },
+    { value:'ON_DELIVERY', label: 'Thanh toán khi nhận hàng' },
+    { value:'ONLINE', label: 'Thanh toán trực tuyến' },
     // Add more address options as needed
   ];
   useEffect(() => {
@@ -146,10 +150,19 @@ const Order = () => {
       fullName: fullName,
       phone: phone, 
       address: selectedAddress.value,
-      totalAmount: (total + selectedDelivery.value).toFixed(2), // Tổng giá trị đơn hàng
+      totalAmount: (total + selectedDelivery.value).toFixed(2), 
+      paymentMethod:paymethodMethod.value,
     };
     console.log("Giá trị order:",orderData)
+    if(!orderData.fullName ){
+      toast.info("Vui lòng điền tên người nhận")
+      return
+    } else if(!orderData.phone){
+      toast.info("Vui lòng điền số điện thoại")
+      return
+    }
     try {
+      setSpinning(true);
       const response = await fetch('http://localhost:3333/api/v1/customer/orders/create', {
         method: 'POST',
         headers: {
@@ -161,7 +174,7 @@ const Order = () => {
   
       if (response.ok) {
         const data = await response.json();
-        toast.success(data.message, {
+        toast.success("Đặt hàng thành công", {
           onClose: () => {
             localStorage.removeItem('tempOrder');
             navigate('/cart')
@@ -174,7 +187,19 @@ const Order = () => {
       }
     } catch (error) {
       toast.error('Lỗi kết nối:', error);
+    }finally {
+      setSpinning(false);
     }
+  };
+  const formatCurrency = (value) => {
+    const formattedValue = new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0, // Để loại bỏ phần thập phân
+      maximumFractionDigits: 0, // Để loại bỏ phần thập phân
+    }).format(value);
+  
+    return formattedValue;
   };
   return (
     <div style={{ backgroundColor: '#FFFAFA' }}>
@@ -201,13 +226,13 @@ const Order = () => {
                         <CCol xs="6" className="mb-3">
                         <CInputGroup >
                           <CInputGroupText style={{ width: '150px' }}>Tên người nhận</CInputGroupText>
-                          <CFormInput aria-label="fullName" onChange={handleFullNameChange} />
+                          <CFormInput aria-label="fullName" onChange={handleFullNameChange} required />
                         </CInputGroup>
                         </CCol>
                         <CCol xs="6" className="mb-3">
                         <CInputGroup >
                           <CInputGroupText>Số điện thoại</CInputGroupText>
-                          <CFormInput aria-label="Phone"  onChange={handlePhoneChange}/>
+                          <CFormInput aria-label="Phone"  onChange={handlePhoneChange} required/>
                         </CInputGroup>
                         </CCol>
                       </CRow>
@@ -246,26 +271,23 @@ const Order = () => {
                             <p style={{color: 'black'}}>
                               <strong>Tổng tiền hàng:</strong>
                             </p>
-                            <p style={{color: 'black'}}>{total.toFixed(2)} VNĐ</p>
+                            <p style={{color: 'black'}}>{formatCurrency(total || 0)}</p>
                           </div>
                           <div className='custome-total-payment'>
                             <p style={{color: 'black'}}>
                               <strong>Phí vận chuyển:</strong>
                             </p>
-                            <p style={{color: 'black'}}> {selectedDelivery ? selectedDelivery.value : 0} VNĐ</p>
+                            <p style={{color: 'black'}}> {selectedDelivery ? formatCurrency(selectedDelivery.value||0) : 0}</p>
                           </div>
                           <div className='custome-total-payment'>
                             <p style={{color: 'black'}} >
                               <strong>Tổng thanh toán:</strong>
                             </p>
-                            <p style={{fontSize:'30px'}}>{(total + (selectedDelivery ? selectedDelivery.value : 0)).toFixed(2)}  VNĐ</p>
+                            <p style={{fontSize:'30px'}}>{formatCurrency(total + (selectedDelivery ? selectedDelivery.value : 0) || 0)}</p>
                           </div>
                         </div>
-                        </CCol>
-                      </CRow>
-                      <CRow>
-                        <CCol>
-                          <CButton style={{ display:'flex',marginLeft: 'auto',alignItems: 'flex-end'}}onClick={handlePlaceOrder} >Đặt hàng</CButton>
+                        <CButton style={{ display:'flex',marginLeft: 'auto',alignItems: 'flex-end'}}onClick={handlePlaceOrder} >Đặt hàng</CButton>
+
                         </CCol>
                       </CRow>
             </div>
@@ -284,6 +306,7 @@ const Order = () => {
         pauseOnHover
         theme="light"
       />
+      <Spin spinning={spinning} fullscreen />
     </div>
   );
 };
