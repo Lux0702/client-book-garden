@@ -12,8 +12,8 @@ const CommentInput  = (props) => {
     setUserCurrent(user);
     setImageCurrent(user?.avatar || avatar);
     console.log("Giá trị userCurrent:", user);
-  }, [userCurrent]);
-  const {dataApi}  = props;
+  }, []);
+  const {dataApi} = props
   // const [data] = useState([
   //   {
   //     userId: userCurrent?.userId || ''      ,
@@ -34,26 +34,27 @@ const CommentInput  = (props) => {
   //     ]
   //   },
   // ])
-  const [data] = dataApi.comments
+  const [data] = dataApi && dataApi.comments
   ? dataApi.comments.map(comment => ({
-      userId: comment.user,
+      userId: comment.user.id,
       comId: comment.id,
-      fullName: comment.fullName ? comment.fullName : 'Unknow',
-      avatarUrl: comment.avatar ? comment.avatar : avatar,
+      fullName: comment.user.fullName ? comment.user.fullName : 'Unknow',
+      avatarUrl: comment.user.avatar ? comment.user.avatar : avatar,
       userProfile: '#',
       text: comment.comment ? comment.comment : '',
       replies: comment.replies.map(reply => ({
-        userId: reply.user,
+        userId: reply.user.id,
         comId: reply.id,
         userProfile: '#',
-        fullName: reply.fullName ? reply.fullName : 'Unknow',
-        avatarUrl: reply.avatar ? reply.avatar : avatar,
+        fullName: reply.user.fullName ? reply.user.fullName : 'Unknow',
+        avatarUrl: reply.user.avatar ? reply.user.avatar : avatar,
         text: reply.comment ? reply.comment : '',
       })),
     }))
   : [];
-
-
+  console.log("data  dataApi là: ",dataApi)
+  console.log("Type of dataApi:", typeof dataApi)
+  console.log("data là: ",data)
   return (
     <div style={{ width: '100%' }}>
       <CommentSection

@@ -89,7 +89,7 @@ const HeaderPost = ()=>{
     if(user){
         const token=user.accessToken;
         setIsLoggedIn(true)
-        setFullName(userinfor.fullName);
+        setFullName(userinfor.fullName?userinfor.fullName: " ");
         setuserRole(userinfor.role);
         setAvatar(userinfor.avatar)
     const fetchProfileData = async () => {

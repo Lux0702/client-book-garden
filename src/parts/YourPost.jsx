@@ -41,7 +41,7 @@ import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from "../context/Constant";
 const YourPost = () => {
   const [posts, setPosts] = useState([])
-  const [commentPost,setCommentPost]= useState([])
+  const [commentPost,setCommentPost]= useState(null)
   const [selectedPost,setSelectedPost]= useState(null)
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [showMore, setShowMore] = useState(false);
@@ -103,6 +103,7 @@ const YourPost = () => {
           ...prevCommentPost,
           [id]: data.data,
         }));
+        setIsUserModalOpen(true);
         console.log("data comment detail",data.data)
       } else {
         console.error('Error fetching product data:', response.statusText);
@@ -119,12 +120,12 @@ const YourPost = () => {
      {posts.map((post, index) => (
           <><CCard key={index} className="mb-2">
          <CCardHeader>
-           <CAvatar src={post.postedBy.avatar} />
+           <CAvatar style={{maxWidth:'32px', maxHeight:'32px',height:'32px'}} src={post.postedBy.avatar}  />
            <strong style={{ marginLeft: "5px" }}>{post.postedBy.fullname}<br /></strong>
            <small>
              <CBadge color="success"><em>{post.status}</em></CBadge>
            </small>
-           <strong><em>{post.title}</em></strong>
+           <strong><em>{'  '}Tựa đề: {post.title}</em></strong>
          </CCardHeader>
          <CCardBody>
            <blockquote className={`hide-post ${isContentVisible ? 'visible' : 'hidden-post'}`}>
@@ -137,13 +138,16 @@ const YourPost = () => {
          </CCardBody>
          <CCardFooter>
            <button className='button-footer' 
-            onClick={() => navigate(`/API_BASE_URL/books/${post.id}`)}
+            onClick={() => navigate(`/book-detail/${post.book.id}`)}
             > 
            <FaArrowRight /> Xem sản phẩm</button>
            <button className='button-footer' onClick={() => { 
+              //setSelectedPost(post.id)
+              console.log("id post:",post.id)
+              setCommentPost(posts.find((item) => item.id === post.id))
+              console.log("selectedPost:",selectedPost)
               setIsUserModalOpen(true);
-            handleCommentPost(post.id); 
-            setSelectedPost(post._id)} }><FaComment /> Bình luận</button>
+            } }><FaComment /> Bình luận</button>
          </CCardFooter>
        </CCard><Divider orientation style={{ marginTop: "10px", marginBottom: "15px" }}></Divider></>
 
@@ -162,7 +166,9 @@ const YourPost = () => {
       <CModalTitle><strong>Bình luận</strong></CModalTitle>
       </CModalHeader>
       <CModalBody>
-      <CommentInput data={commentPost[selectedPost]}/>
+        {console.log("comment là :",commentPost)}
+        {console.log("Type of commentPost:", typeof commentPost)}
+      <CommentInput data={JSON.stringify(commentPost)}/>
       </CModalBody>
       <CModalFooter>
       

@@ -36,6 +36,8 @@ import 'react-comments-section/dist/index.css';
 import {  Spin } from 'antd'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { API_BASE_URL } from "../context/Constant";
+
 // import { TextareaCodeEditor } from '@uiw/react-textarea-code-editor';
 const PostSidebar = () => {
   const [ispostsNewModal, setPostsNewModal] = useState(false);
@@ -45,10 +47,17 @@ const PostSidebar = () => {
   const [postData, setPostData] = useState({
     title: '',
     content: '',
+    bookId: '',
   });
   const navigate = useNavigate();
   const handleChange = (selectedOption) => {
     setSelectedOption(selectedOption)
+    setPostData((prevData) => ({
+      ...prevData,
+      bookId: selectedOption ? selectedOption.value : '', 
+    }));
+    console.log("gid là;",postData)
+    console.log("book là;",books)
   };
   const handleInputChange = (e) => {
     // Handle changes in the input fields
@@ -67,12 +76,12 @@ const PostSidebar = () => {
     const fetchBooks = async () => {
       try {
         setSpinning(true)
-        const response = await fetch('http://localhost:3333/api/v1/books')
+        const response = await fetch(`${API_BASE_URL}/books`)
         if (response.ok) {
           const books = await response.json()
           setBooks(
             books.data.map((book) => ({
-              value: book.title,
+              value: book._id,
               label: book.title,
             })),
           )
@@ -115,7 +124,7 @@ const PostSidebar = () => {
     console.log('Current postData:', postData);
     try {
       setSpinning(true)
-      const response = await fetch("http://localhost:3333/api/v1/posts/create", {
+      const response = await fetch(`${API_BASE_URL}/posts/create`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
